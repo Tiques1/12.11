@@ -14,6 +14,7 @@ namespace Abcd
     {
         public static string[][] fornextsorting = new string[1000][]; // "Дальнейшая сортировка" - сюда сохраняем какую-либо выборку для возможности дальнейшей сортировки
         public static int j = 0;
+        public static int z = 0;
         public static void Main()
         {
             Console.WriteLine(@"Вставьте путь к файлу countrey.txt Весь путь кроме названия самого файла: \countrey.txt !!!");
@@ -27,19 +28,25 @@ namespace Abcd
                 line[i] = s.Split(';');
                 i++;
             }
-
+            
             do
             {
                 Sorting(line);
                 Compare();
-                SearchByLetter();              
+                SearchByLetter();
+                Writer();
             }
             while (Reset());
 
+            
+           
 
 
 
-            }
+
+
+
+        }
 
         public static void Sorting(string[][] line) // сортировка по материкам и запись в "дальнейшую сортировку"
         {
@@ -87,7 +94,7 @@ namespace Abcd
         }
         public static void SortingToDown(string[][] fornextsorting,int  squareorpeople)
         {
-
+            
             bool flag = true;
             while (flag == true)
             {
@@ -191,7 +198,7 @@ namespace Abcd
             char[] letter = Console.ReadLine().ToUpper().ToCharArray();
            
 
-            int z = 0;
+            
             for(int i = 0; i < j ; i++)
             {
                 char[] name = fornextsorting[i][couorcap].ToCharArray();
@@ -210,7 +217,16 @@ namespace Abcd
         {
             Console.WriteLine("0. Сортировка по названию страны");
             Console.WriteLine("1. Сортировка по названию столицы");
-            int couorcap = Int32.Parse(Console.ReadLine());
+            int couorcap = 0;
+            try
+            {
+                couorcap = Int32.Parse(Console.ReadLine());
+            }
+            catch
+            {
+                Console.WriteLine("Ну и что ты написал? Сказали же: 1 или 0");
+            }
+
             
             if (couorcap == 0)
             {
@@ -237,11 +253,31 @@ namespace Abcd
                 for (int i = 0; i < 1000; i++)
                     fornextsorting[i] = null;
                 j = 0;
+                z = 0;
                 return true;
             }
             else
             {
                 return false;
+            }
+        }
+
+        public static void Writer()
+        {
+            Console.WriteLine("Теперь сохраним выборку");                     
+            Console.WriteLine("Сначала напиши путь к файлу. (Просто скопируй и вставь, больше ничего делать не надо)");
+            string path1 = Console.ReadLine();
+            Console.WriteLine("А теперь напиши название файла. Без расширения ");
+            string path2 = Console.ReadLine();
+
+            string personpath = path1 + "\\" + path2 + ".txt";
+            File.Create(personpath).Close();
+
+
+            using (StreamWriter stream = new StreamWriter(personpath, true))
+            {
+                for (int n = 0; n < z; n++)
+                    stream.WriteLine(string.Join(";", fornextsorting[n]));
             }
         }
     }    
